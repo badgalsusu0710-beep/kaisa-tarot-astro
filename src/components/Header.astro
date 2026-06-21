@@ -1,0 +1,28 @@
+---
+import type { Lang, PageKey, SiteContent } from '../data/site';
+import { localizedPath } from '../data/site';
+
+interface Props { lang: Lang; page: 'home' | PageKey; content: SiteContent; }
+const { lang, page, content } = Astro.props;
+const otherLang: Lang = lang === 'zh' ? 'en' : 'zh';
+const navItems: Array<['home' | PageKey, string]> = [
+  ['home', content.nav.home], ['about', content.nav.about], ['services', content.nav.services], ['approach', content.nav.approach], ['contact', content.nav.contact],
+];
+---
+<header class="site-header" data-header>
+  <a class="brand" href={localizedPath(lang)} aria-label={`${content.nav.home} · Kaisa Tarot & Astrology`}>
+    <span class="brand-mark" aria-hidden="true"><i></i></span>
+    <span class="brand-text"><strong>Kaisa</strong><small>TAROT & ASTROLOGY</small></span>
+  </a>
+  <nav class="desktop-nav" aria-label="Primary navigation">
+    {navItems.map(([key, label]) => <a href={localizedPath(lang, key)} aria-current={page === key ? 'page' : undefined}>{label}</a>)}
+  </nav>
+  <div class="header-actions">
+    <a class="language-link" href={localizedPath(otherLang, page)} lang={otherLang}>{content.switchLabel}</a>
+    <button class="menu-toggle" type="button" aria-label="Menu" aria-expanded="false" data-menu-toggle><span></span><span></span></button>
+  </div>
+  <nav class="mobile-nav" aria-label="Mobile navigation" data-mobile-nav>
+    {navItems.map(([key, label]) => <a href={localizedPath(lang, key)} aria-current={page === key ? 'page' : undefined}>{label}</a>)}
+    <a class="mobile-book" href={localizedPath(lang, 'contact')}>{content.common.book}</a>
+  </nav>
+</header>

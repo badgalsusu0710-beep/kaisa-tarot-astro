@@ -1,0 +1,8 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import HomePage from '../../views/HomePage.astro';
+import type { Lang } from '../../data/site';
+export function getStaticPaths() { return [{ params: { lang: 'zh' } }, { params: { lang: 'en' } }]; }
+const lang = Astro.params.lang as Lang;
+---
+<BaseLayout {lang} page="home"><HomePage {lang} /></BaseLayout>

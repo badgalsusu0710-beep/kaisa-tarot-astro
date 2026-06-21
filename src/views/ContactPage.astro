@@ -1,0 +1,13 @@
+---
+import PageHero from '../components/PageHero.astro'; import type { Lang } from '../data/site'; import { brand, getContent } from '../data/site';
+const { lang } = Astro.props as { lang: Lang }; const c = getContent(lang);
+---
+<PageHero eyebrow={c.contact.eyebrow} title={c.contact.title} lead={c.contact.lead} compact />
+<section class="section contact-grid">
+  <div class="contact-card reveal"><p class="eyebrow">WECHAT</p><h2>{c.contact.scan}</h2><img src="/images/media/wechat-qr.png" width="502" height="502" alt={c.contact.scan} /><div class="contact-id"><span>{c.contact.idLabel}</span><strong>{brand.wechatId}</strong></div><p class="asset-warning">{c.contact.assetNote}</p></div>
+  <div class="contact-details">
+    <div class="contact-steps reveal"><p class="eyebrow">PROCESS</p><h2>{c.contact.stepsTitle}</h2>{c.contact.steps.map(([n,t,p]) => <article><span>{n}</span><div><h3>{t}</h3><p>{p}</p></div></article>)}</div>
+    <div class="other-contact reveal"><p class="eyebrow">CONNECT</p><h2>{c.contact.other}</h2><a href={brand.instagram} target="_blank" rel="noreferrer"><span>{c.contact.instagram}</span><strong>@请替换账号</strong><i>↗</i></a><a href={`mailto:${brand.email}`}><span>{c.contact.email}</span><strong>{brand.email}</strong><i>↗</i></a></div>
+  </div>
+</section>
+<section class="section rules-section"><div class="section-heading reveal"><p class="eyebrow">BOOKING POLICY</p><h2>{c.contact.rulesTitle}</h2></div><ul class="rules-list">{c.contact.rules.map((rule,i) => <li class="reveal"><span>0{i+1}</span>{rule}</li>)}</ul></section>

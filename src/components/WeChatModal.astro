@@ -1,0 +1,15 @@
+---
+import type { SiteContent } from '../data/site';
+import { brand } from '../data/site';
+interface Props { content: SiteContent; }
+const { content } = Astro.props;
+---
+<dialog class="wechat-modal" data-wechat-modal aria-labelledby="wechat-title">
+  <button class="modal-close" type="button" data-modal-close aria-label={content.modal.close}>×</button>
+  <p class="eyebrow">WECHAT</p>
+  <h2 id="wechat-title">{content.modal.title}</h2>
+  <p>{content.modal.text}</p>
+  <img src="/images/media/wechat-qr.png" width="502" height="502" alt={content.contact.scan} />
+  <div class="wechat-id"><span>{content.contact.idLabel}</span><strong>{brand.wechatId}</strong></div>
+  <small>{content.modal.placeholder}</small>
+</dialog>

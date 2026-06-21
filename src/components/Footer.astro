@@ -1,0 +1,25 @@
+---
+import type { Lang, SiteContent } from '../data/site';
+import { brand, localizedPath } from '../data/site';
+interface Props { lang: Lang; content: SiteContent; }
+const { lang, content } = Astro.props;
+---
+<footer class="site-footer">
+  <div class="footer-orbit" aria-hidden="true"><span></span></div>
+  <div class="footer-top">
+    <div>
+      <div class="footer-brand">Kaisa <i>Tarot & Astrology</i></div>
+      <p>{content.footer.tagline}</p>
+    </div>
+    <nav aria-label="Footer navigation">
+      <a href={localizedPath(lang, 'about')}>{content.nav.about}</a>
+      <a href={localizedPath(lang, 'services')}>{content.nav.services}</a>
+      <a href={localizedPath(lang, 'approach')}>{content.nav.approach}</a>
+      <a href={localizedPath(lang, 'contact')}>{content.nav.contact}</a>
+    </nav>
+  </div>
+  <div class="footer-bottom">
+    <span>© {new Date().getFullYear()} {brand.name}. {content.footer.rights}</span>
+    <span>London · Shanghai · Worldwide</span>
+  </div>
+</footer>

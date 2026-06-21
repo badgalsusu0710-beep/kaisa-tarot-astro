@@ -1,0 +1,14 @@
+---
+import PageHero from '../components/PageHero.astro';
+import type { Lang } from '../data/site'; import { getContent } from '../data/site';
+const { lang } = Astro.props as { lang: Lang }; const c = getContent(lang);
+---
+<PageHero eyebrow={c.services.eyebrow} title={c.services.title} lead={c.services.lead} />
+{([['tarot', c.services.tarotTitle, c.services.tarotIntro], ['astrology', c.services.astrologyTitle, c.services.astrologyIntro]] as const).map(([type, title, intro]) =>
+  <section class="section service-category" id={type}>
+    <div class="category-heading reveal"><span class="category-symbol">{type === 'tarot' ? '✦' : '◯'}</span><div><p class="eyebrow">{type.toUpperCase()}</p><h2>{title}</h2><p>{intro}</p></div></div>
+    <div class="service-list">{c.services.items[type].map((item, i) => <article class="service-card reveal"><div class="service-card-top"><span>0{i + 1}</span><h3>{item.name}</h3></div><dl><div><dt>{c.common.suitable}</dt><dd>{item.for}</dd></div>{type === 'tarot' && <div><dt>{c.common.duration}</dt><dd>{item.duration}</dd></div>}<div><dt>{c.common.price}</dt><dd class="price">{item.price}</dd></div></dl><button type="button" class="text-link" data-open-wechat>{c.common.book}<span>↗</span></button></article>)}</div>
+  </section>
+)}
+<aside class="placeholder-note">{c.services.note}</aside>
+<section class="section booking-process"><div class="section-heading reveal"><p class="eyebrow">BOOKING</p><h2>{c.services.processTitle}</h2></div><div class="process-grid">{c.services.process.map(([n,t,p]) => <article class="process-step reveal"><span>{n}</span><h3>{t}</h3><p>{p}</p></article>)}</div></section>

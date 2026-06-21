@@ -1,0 +1,25 @@
+---
+import PageHero from '../components/PageHero.astro';
+import type { Lang } from '../data/site';
+import { getContent } from '../data/site';
+const { lang } = Astro.props as { lang: Lang }; const c = getContent(lang);
+---
+<PageHero eyebrow={c.about.eyebrow} title={c.about.title} lead={c.about.lead} />
+<section class="section about-story">
+  <figure class="portrait reveal"><img src="/images/media/portrait-main.webp" alt="Kaisa" width="1080" height="1620" /><figcaption>{c.about.assetNote}</figcaption></figure>
+  <div class="story-copy reveal"><p class="eyebrow">MY PRACTICE</p><h2>{c.about.storyTitle}</h2>{c.about.story.map((p, i) => i === 0 ? <p class="story-emphasis">{p}</p> : <p>{p}</p>)}</div>
+</section>
+<section class="section credentials-section">
+  <div class="section-heading reveal"><p class="eyebrow">{c.common.credential}</p><h2>{c.about.credentialsTitle}</h2></div>
+  <div class="credential-grid">{c.about.credentials.map(([mark, title, text]) => <article class="credential reveal"><strong>{mark}</strong><h3>{title}</h3><p>{text}</p></article>)}</div>
+  <div class="certificate-proof reveal"><div><p class="eyebrow">CERTIFICATE IN TAROT</p><h3>{c.about.certificateTitle}</h3><p>{c.about.certificateText}</p></div><img src="/images/media/credential-lsa.webp" alt={c.about.certificateText} loading="lazy" width="1179" height="786" /></div>
+</section>
+<section class="section principles-section">
+  <div class="section-heading reveal"><p class="eyebrow">VALUES</p><h2>{c.about.principlesTitle}</h2></div>
+  <div class="principle-grid">{c.about.principles.map(([title, text], i) => <article class="principle reveal"><span>0{i + 1}</span><h3>{title}</h3><p>{text}</p></article>)}</div>
+</section>
+<section class="portrait-signature">
+  <figure class="reveal"><img src="/images/media/portrait-close.webp" alt="Kaisa portrait" loading="lazy" width="1200" height="1800" /></figure>
+  <div class="signature-quote reveal"><span>“</span><blockquote>{c.about.signatureQuote}</blockquote><p>KAISA TAROT & ASTROLOGY</p></div>
+  <figure class="reveal"><img src="/images/media/portrait-editorial.webp" alt="Kaisa portrait" loading="lazy" width="1200" height="1800" /></figure>
+</section>

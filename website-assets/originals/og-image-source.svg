@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <defs><radialGradient id="g"><stop stop-color="#513267"/><stop offset="1" stop-color="#0c0812"/></radialGradient></defs>
+  <rect width="1200" height="630" fill="url(#g)"/>
+  <circle cx="965" cy="315" r="200" fill="none" stroke="#b89a5d" stroke-width="2"/>
+  <circle cx="965" cy="315" r="115" fill="none" stroke="#d7d2df" stroke-opacity=".45"/>
+  <path d="M765 315h400M965 115v400" stroke="#d7d2df" stroke-opacity=".22"/>
+  <text x="100" y="260" fill="#f4f0e9" font-family="serif" font-size="70">Kaisa Tarot</text>
+  <text x="100" y="342" fill="#f4f0e9" font-family="serif" font-size="70">&amp; Astrology</text>
+  <text x="104" y="410" fill="#b89a5d" font-family="sans-serif" font-size="22" letter-spacing="8">CLARITY · INSIGHT · DIRECTION</text>
+</svg>

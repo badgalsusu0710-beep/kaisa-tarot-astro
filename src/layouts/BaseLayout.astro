@@ -1,0 +1,72 @@
+---
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import WeChatModal from '../components/WeChatModal.astro';
+import type { Lang, PageKey } from '../data/site';
+import { getContent, localizedPath } from '../data/site';
+import '../styles/global.css';
+
+interface Props { lang: Lang; page: 'home' | PageKey; }
+const { lang, page } = Astro.props;
+const content = getContent(lang);
+const [title, description] = content.meta[page];
+const canonical = new URL(localizedPath(lang, page), Astro.site);
+const alternateLang: Lang = lang === 'zh' ? 'en' : 'zh';
+---
+<!doctype html>
+<html lang={lang === 'zh' ? 'zh-CN' : 'en'}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#0c0812" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang={lang === 'zh' ? 'zh-CN' : 'en'} href={canonical} />
+    <link rel="alternate" hreflang={alternateLang === 'zh' ? 'zh-CN' : 'en'} href={new URL(localizedPath(alternateLang, page), Astro.site)} />
+    <link rel="alternate" hreflang="x-default" href={new URL('/zh/', Astro.site)} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL('/images/og-image.png', Astro.site)} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <title>{title}</title>
+    <script is:inline>
+      document.documentElement.classList.add('js');
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <Header {lang} {page} {content} />
+    <main id="main"><slot /></main>
+    <Footer {lang} {content} />
+    <WeChatModal {content} />
+    <script>
+      const header = document.querySelector('[data-header]');
+      const menuButton = document.querySelector('[data-menu-toggle]');
+      const mobileNav = document.querySelector('[data-mobile-nav]');
+      const modal = document.querySelector('[data-wechat-modal]');
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      window.addEventListener('scroll', () => header?.classList.toggle('is-scrolled', window.scrollY > 20), { passive: true });
+      menuButton?.addEventListener('click', () => {
+        const open = menuButton.getAttribute('aria-expanded') === 'true';
+        menuButton.setAttribute('aria-expanded', String(!open));
+        mobileNav?.classList.toggle('is-open', !open);
+        document.body.classList.toggle('menu-open', !open);
+      });
+
+      document.querySelectorAll('[data-open-wechat]').forEach((button) => button.addEventListener('click', () => modal instanceof HTMLDialogElement && modal.showModal()));
+      document.querySelector('[data-modal-close]')?.addEventListener('click', () => modal instanceof HTMLDialogElement && modal.close());
+      modal?.addEventListener('click', (event) => { if (event.target === modal && modal instanceof HTMLDialogElement) modal.close(); });
+
+      const reveals = document.querySelectorAll('.reveal');
+      if (reduceMotion || !('IntersectionObserver' in window)) reveals.forEach((el) => el.classList.add('is-visible'));
+      else {
+        const observer = new IntersectionObserver((entries) => entries.forEach((entry) => { if (entry.isIntersecting) { entry.target.classList.add('is-visible'); observer.unobserve(entry.target); } }), { threshold: 0.12 });
+        reveals.forEach((el) => observer.observe(el));
+      }
+    </script>
+  </body>
+</html>

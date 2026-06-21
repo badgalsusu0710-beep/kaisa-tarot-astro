@@ -1,0 +1,8 @@
+---
+import PageHero from '../components/PageHero.astro';
+import type { Lang } from '../data/site'; import { getContent } from '../data/site';
+const { lang } = Astro.props as { lang: Lang }; const c = getContent(lang);
+---
+<PageHero eyebrow={c.approach.eyebrow} title={c.approach.title} lead={c.approach.lead} />
+<section class="section framework-section"><div class="section-heading reveal"><p class="eyebrow">THE FRAMEWORK</p><h2>{c.approach.frameworkTitle}</h2></div><div class="framework-grid">{c.approach.framework.map(([title,text],i) => <article class="framework-card reveal"><span>0{i+1}</span><h3>{title}</h3><p>{text}</p></article>)}</div></section>
+<section class="section case-study-section"><div class="section-heading reveal"><p class="eyebrow">ANONYMOUS CASES</p><h2>{c.approach.caseTitle}</h2></div><div class="case-study-list">{c.approach.cases.map((item,i) => <article class="case-study reveal"><div class="case-study-index">0{i+1}</div><div class="case-study-main"><small>{item.tag}</small><h3>{item.title}</h3><div class="case-study-columns"><div><h4>CONTEXT</h4><p>{item.question}</p></div><div><h4>INSIGHT</h4><p>{item.insight}</p></div><div><h4>DIRECTION</h4><p>{item.direction}</p></div></div></div></article>)}</div><p class="privacy-note">✦ {c.approach.privacy}</p></section>

@@ -1,0 +1,13 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getContent } from '../data/site';
+const content = getContent('zh');
+---
+<BaseLayout lang="zh" page="home">
+  <section class="not-found">
+    <p class="eyebrow">404 · LOST IN TRANSIT</p>
+    <h1>{content.notFound.title}</h1>
+    <p>{content.notFound.text}</p>
+    <a class="button button--gold" href="/zh/">{content.common.backHome}</a>
+  </section>
+</BaseLayout>
