@@ -5,8 +5,8 @@ const { lang } = Astro.props as { lang: Lang };
 const c = getContent(lang);
 ---
 <section class="home-hero">
-  <div class="hero-stars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
-  <div class="hero-orbit" aria-hidden="true"><span class="orbit-a"></span><span class="orbit-b"></span><span class="orbit-core"></span></div>
+  <canvas class="hero-starfield" data-starfield aria-hidden="true"></canvas>
+  <div class="hero-nebula" aria-hidden="true"></div>
   <div class="hero-copy reveal">
     <p class="eyebrow">{c.home.eyebrow}</p>
     <h1>{c.home.title.split('\n').map((line) => <>{line}<br /></>)}</h1>
@@ -21,6 +21,83 @@ const c = getContent(lang);
     {c.home.proof.map((item, index) => <div><span>0{index + 1}</span><p>{item}</p></div>)}
   </div>
 </section>
+
+<script>
+  const canvas = document.querySelector<HTMLCanvasElement>('[data-starfield]');
+
+  if (canvas) {
+    const context = canvas.getContext('2d');
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const pointer = { x: 0, y: 0 };
+    let width = 0;
+    let height = 0;
+    let frame = 0;
+    let stars: Array<{ x: number; y: number; z: number; size: number; tone: number }> = [];
+
+    const makeStar = (z = Math.random() * .92 + .08) => ({
+      x: (Math.random() - .5) * 2.2,
+      y: (Math.random() - .5) * 2.2,
+      z,
+      size: Math.random() * 1.25 + .25,
+      tone: Math.random(),
+    });
+
+    const populate = () => {
+      const count = width < 600 ? 72 : width < 1000 ? 110 : 155;
+      stars = Array.from({ length: count }, () => makeStar());
+    };
+
+    const resize = () => {
+      const rect = canvas.getBoundingClientRect();
+      const ratio = Math.min(window.devicePixelRatio || 1, 2);
+      width = rect.width;
+      height = rect.height;
+      canvas.width = Math.round(width * ratio);
+      canvas.height = Math.round(height * ratio);
+      context?.setTransform(ratio, 0, 0, ratio, 0, 0);
+      populate();
+    };
+
+    const draw = () => {
+      if (!context) return;
+      context.clearRect(0, 0, width, height);
+
+      for (const star of stars) {
+        if (!reduceMotion) star.z -= .0007;
+        if (star.z <= .04) Object.assign(star, makeStar(1));
+
+        const depth = 1 / star.z;
+        const x = width * .66 + star.x * width * .34 * depth + pointer.x * (1 - star.z) * 12;
+        const y = height * .49 + star.y * height * .34 * depth + pointer.y * (1 - star.z) * 8;
+        if (x < -10 || x > width + 10 || y < -10 || y > height + 10) {
+          Object.assign(star, makeStar(1));
+          continue;
+        }
+
+        const radius = Math.min(star.size * depth, 2.1);
+        const alpha = Math.min(.14 + (1 - star.z) * .78, .9);
+        const violet = star.tone > .88;
+        context.beginPath();
+        context.fillStyle = violet ? `rgba(151, 143, 177, ${alpha * .72})` : `rgba(222, 221, 227, ${alpha})`;
+        context.arc(x, y, radius, 0, Math.PI * 2);
+        context.fill();
+      }
+
+      if (!reduceMotion) frame = window.requestAnimationFrame(draw);
+    };
+
+    const onPointerMove = (event: PointerEvent) => {
+      pointer.x = event.clientX / window.innerWidth - .5;
+      pointer.y = event.clientY / window.innerHeight - .5;
+    };
+
+    resize();
+    draw();
+    window.addEventListener('resize', resize, { passive: true });
+    window.addEventListener('pointermove', onPointerMove, { passive: true });
+    window.addEventListener('pagehide', () => window.cancelAnimationFrame(frame), { once: true });
+  }
+</script>
 
 <section class="section section--services">
   <div class="section-heading reveal"><p class="eyebrow">{c.home.servicesEyebrow}</p><h2>{c.home.servicesTitle}</h2><p>{c.home.servicesIntro}</p></div>
