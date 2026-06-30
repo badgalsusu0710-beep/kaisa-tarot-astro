@@ -6,7 +6,7 @@ interface Props { lang: Lang; page: 'home' | PageKey; content: SiteContent; }
 const { lang, page, content } = Astro.props;
 const otherLang: Lang = lang === 'zh' ? 'en' : 'zh';
 const navItems: Array<['home' | PageKey, string]> = [
-  ['home', content.nav.home], ['about', content.nav.about], ['services', content.nav.services], ['approach', content.nav.approach], ['contact', content.nav.contact],
+  ['home', content.nav.home], ['about', content.nav.about], ['services', content.nav.services], ['spreads', content.nav.spreads], ['approach', content.nav.approach], ['contact', content.nav.contact],
 ];
 ---
 <header class="site-header" data-header>

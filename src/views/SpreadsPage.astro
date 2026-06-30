@@ -1,0 +1,37 @@
+---
+import PageHero from '../components/PageHero.astro';
+import type { Lang } from '../data/site';
+import { getContent } from '../data/site';
+const { lang } = Astro.props as { lang: Lang };
+const c = getContent(lang);
+---
+<PageHero eyebrow={c.spreads.eyebrow} title={c.spreads.title} lead={c.spreads.lead} compact />
+{c.spreads.items.map((s) => {
+  const cw = s.cw;
+  const ch = s.ch;
+  return (
+    <section class="section spread-block">
+      <div class="spread-head reveal">
+        <div><p class="eyebrow">{s.en}</p><h2>{s.name}</h2></div>
+        <span class="spread-cards">{c.spreads.cardsLabel} · {s.cards}</span>
+      </div>
+      {s.intro && <p class="spread-intro reveal">{s.intro}</p>}
+      <div class="spread-diagram reveal">
+        <svg viewBox={`0 0 600 ${s.vh}`} role="img" aria-label={s.name}>
+          <g class="spread-link">{s.links.map((l) => <line x1={l[0]} y1={l[1]} x2={l[2]} y2={l[3]} />)}</g>
+          {s.layout.map((pt, i) => (
+            <g class="card"><rect x={pt[0] - cw / 2} y={pt[1] - ch / 2} width={cw} height={ch} rx="10" /><text class="cnum" x={pt[0]} y={pt[1]}>{i + 1}</text></g>
+          ))}
+          {s.cardLabels.map((lbl, i) => (
+            <text class="clabel" x={s.layout[i][0]} y={s.layout[i][1] + ch / 2 + 28}>{lbl}</text>
+          ))}
+        </svg>
+      </div>
+      <div class="spread-positions reveal">
+        <p class="eyebrow">{c.spreads.positionsLabel}</p>
+        <ul>{s.positions.map((p) => <li><span class="pos-no">{p[0]}</span><div><strong>{p[1]}</strong><p>{p[2]}</p></div></li>)}</ul>
+      </div>
+      <div class="spread-suitable reveal"><p class="eyebrow">{c.spreads.suitableLabel}</p><p>{s.suitable}</p></div>
+    </section>
+  );
+})}
